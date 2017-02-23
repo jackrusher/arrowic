@@ -18,7 +18,7 @@ hand, then export it to SVG.
 Note! There are no options for formatting at present. All graphs look
 like this:
 
-![An example graph](example.svg?raw=true)
+![An example graph](/example.svg)
 
 ## Usage
 
