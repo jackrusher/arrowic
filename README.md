@@ -1,6 +1,7 @@
 # 'Arrowic
 
-Yet another tiny, incomplete clojure wrapper around a Java library!
+O frabjous day! Callooh! Callay! Yet another tiny, incomplete clojure
+wrapper around a Java library!
 
 In this case, the
 simplest
@@ -11,14 +12,19 @@ arrows.
 
 I love `graphviz` as much as the next former-AT&T employee, but it's
 rather nice to be able to generate an *interactive* graph layout from
-within `emacs` (or from the REPL), tinker with it by hand, then export
-it to SVG.
+within `emacs` (or whatever your REPL of choice), tinker with it by
+hand, then export it to SVG.
+
+Note! There are no options for formatting at present. All graphs look
+like this:
+
+![An example graph](example.svg)
 
 ## Usage
 
 A new empty graph is created using `create-graph`. The graph thus
 created can then be mutated in place inside of a `with-graph` form
-using `insert-vertex!` and `insert-edge!`. 
+using `insert-vertex!` and `insert-edge!`.
 
 ``` clojure
 ;; grab some words from the UNIX dictionary
@@ -38,7 +44,7 @@ using `insert-vertex!` and `insert-edge!`.
 
 (def another-graph (random-graph))
 
-;; can change the graph this way:
+;; can change the currently viewed graph this way:
 (view viewer another-graph)
 
 ;; export a graph to SVG
