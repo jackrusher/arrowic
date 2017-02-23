@@ -22,11 +22,15 @@ like this:
 
 ## Usage
 
+`[arrowic "0.1.0-SNAPSHOT"]`
+
 A new empty graph is created using `create-graph`. The graph thus
 created can then be mutated in place inside of a `with-graph` form
 using `insert-vertex!` and `insert-edge!`.
 
 ``` clojure
+(use '[arrowic.core])
+
 ;; grab some words from the UNIX dictionary
 (def words
   (into [] (clojure.string/split-lines (slurp "/usr/share/dict/words"))))
