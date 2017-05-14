@@ -20,6 +20,11 @@ a rather large collection of styling options that are currently
 undocumented. See the `arrowic.style` namespace to get some idea of
 how to styles.
 
+If you’re building a Swing application (hopefully
+using [seesaw](https://github.com/daveray/seesaw)), you can create a
+Swing component to display your graph using the `as-swing-component`
+function.
+
 ## Usage
 
 `[arrowic "0.1.1-SNAPSHOT"]`
