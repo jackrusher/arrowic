@@ -15,13 +15,10 @@ but it's also rather nice to be able to generate an *interactive*
 graph layout from _within_ `emacs` (or whatever your REPL of choice),
 tinker with it by hand, then export it to SVG.
 
-The default graph style looks like this:
-
-![An example graph](example.svg)
-
-There is also a rather large collection of styling options that are
-currently undocumented. See the `arrowic.style` namespace to get some
-idea of how to styles.
+The default graph style looks like [this](example.svg). There is also
+a rather large collection of styling options that are currently
+undocumented. See the `arrowic.style` namespace to get some idea of
+how to styles.
 
 ## Usage
 
