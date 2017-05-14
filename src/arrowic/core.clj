@@ -52,7 +52,7 @@
                 *graph*
                 javax.swing.SwingConstants/NORTH)
        (.setFineTuning true)
-       (setUseBoundingBox true)
+       (.setUseBoundingBox true)
        (.execute (.getDefaultParent *graph*)))
      (.endUpdate (.getModel *graph*))
      *graph*))
