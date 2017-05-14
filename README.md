@@ -22,7 +22,7 @@ how to styles.
 
 ## Usage
 
-`[arrowic "0.1.0-SNAPSHOT"]`
+`[arrowic "0.1.1-SNAPSHOT"]`
 
 A new empty graph is created using `create-graph`. The graph thus
 created can then be mutated in place inside of a `with-graph` form
@@ -40,7 +40,9 @@ using `insert-vertex!` and `insert-edge!`.
   (with-graph (create-graph)
     (let [vertices (repeatedly 10 #(insert-vertex! (rand-nth words)))]
       (doseq [edge-label (repeatedly 20 #(rand-nth words))]
-        (insert-edge! (rand-nth vertices) (rand-nth vertices) :label edge-label)))))
+        (insert-edge! (rand-nth vertices) 
+                      (rand-nth vertices)
+                      :label edge-label)))))
 
 (def graph (random-graph))
 
