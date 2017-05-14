@@ -18,7 +18,7 @@ tinker with it by hand, then export it to SVG.
 The default graph style looks like [this](example.svg). There is also
 a rather large collection of styling options that are currently
 undocumented. See the `arrowic.style` namespace to get some idea of
-how to styles.
+how to use styles.
 
 If you’re building a Swing application (hopefully
 using [seesaw](https://github.com/daveray/seesaw)), you can create a
