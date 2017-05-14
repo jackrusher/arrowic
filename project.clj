@@ -1,4 +1,4 @@
-(defproject arrowic "0.1.0-SNAPSHOT"
+(defproject arrowic "0.1.1-SNAPSHOT"
   :description "Quick and dirty directed graph viewer for REPL explorations."
   :url "https://github.com/jackrusher/arrowic"
   :license {:name "Eclipse Public License"

@@ -10,15 +10,18 @@ possible for those situation where you are in the process of
 interrogating some data and would like to how it looks as boxes and
 arrows.
 
-I love `graphviz` as much as the next former-AT&T employee, but it's
-rather nice to be able to generate an *interactive* graph layout from
-within `emacs` (or whatever your REPL of choice), tinker with it by
-hand, then export it to SVG.
+I love `graphviz` as much as the next former-AT&T Research employee,
+but it's also rather nice to be able to generate an *interactive*
+graph layout from _within_ `emacs` (or whatever your REPL of choice),
+tinker with it by hand, then export it to SVG.
 
-Note! There are no options for formatting at present. All graphs look
-like this:
+The default graph style looks like this:
 
-![An example graph](/example.svg)
+![An example graph](example.svg)
+
+There is also a rather large collection of styling options that are
+currently undocumented. See the `arrowic.style` namespace to get some
+idea of how to styles.
 
 ## Usage
 
@@ -40,7 +43,7 @@ using `insert-vertex!` and `insert-edge!`.
   (with-graph (create-graph)
     (let [vertices (repeatedly 10 #(insert-vertex! (rand-nth words)))]
       (doseq [edge-label (repeatedly 20 #(rand-nth words))]
-        (insert-edge! (rand-nth vertices) (rand-nth vertices) edge-label)))))
+        (insert-edge! (rand-nth vertices) (rand-nth vertices) :label edge-label)))))
 
 (def graph (random-graph))
 

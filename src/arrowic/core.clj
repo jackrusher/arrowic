@@ -1,25 +1,46 @@
-(ns arrowic.core)
+(ns arrowic.core
+  (use [arrowic.style]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; minimalist wrapper around mxGraph
 
 (def ^:dynamic *graph* nil)
 
+;; TODO default stylesheet should be used, rather than creating a new
+;; style for every insert, but not sure how to merge default style
+;; with per-node style requests if done that way.
 (defn create-graph
   "Return a new empty graph."
   []
-  (com.mxgraph.view.mxGraph.))
+  (doto (com.mxgraph.view.mxGraph.)
+    (.setCellsLocked true)))
 
 (defn insert-vertex!
   "Inserts vertex `v` into *graph*. The string representation of `v` is used both for its label and as its identity."
-  [v]
+  [v & options]
+  (assert (or (nil? options) (even? (count options)))
+          "The options to insert-vertex! must be an even number of key-value pairs.")
   (let [vs (str v)]
-    (.insertVertex *graph* (.getDefaultParent *graph*) nil vs 20 20 (* 16 (count vs)) 40 "shape=ellipse;perimeter=ellipsePerimeter;fillColor=#eeeeee;strokeColor=white;fontColor=black;fontSize=16")))
+    ;;this, Object parent, String id, Object value, double x, double y, double width, double height, String style
+    (.insertVertex *graph*
+                   (.getDefaultParent *graph*)
+                   nil vs 20 20 (* 16 (count vs)) 40
+                   (make-style-string (merge default-vertex-style (apply hash-map options))))))
 
 (defn insert-edge!
   "Inserts an edge into *graph* between `v1` and `v2` with optional `edge-label`."
-  [v1 v2 & edge-label]
-  (.insertEdge *graph* (.getDefaultParent *graph*) nil (or (first edge-label) "") v1 v2 "strokeColor=#999;fillColor=black;fontColor=black"))
+  [v1 v2 & options]
+  (assert (or (nil? options) (even? (count options)))
+          "The options to insert-edge! must be an even number of key-value pairs.")
+  (let [options (merge default-edge-style (apply hash-map options))]
+    ;;this, Object parent, String id, Object value, Object source, Object target, String style
+    (.insertEdge *graph*
+                 (.getDefaultParent *graph*)
+                 nil
+                 (or (str (:label options)) "")
+                 v1
+                 v2
+                 (make-style-string (dissoc options :label)))))
 
 (defmacro with-graph
   "Evaluates `body` in a context within which *graph* is bound to `graph`, returning `graph`."
@@ -27,10 +48,20 @@
   `(binding [*graph* ~graph]
      (.beginUpdate (.getModel *graph*))
      ~@body
-     (.execute (com.mxgraph.layout.hierarchical.mxHierarchicalLayout. *graph* javax.swing.SwingConstants/WEST)
-               (.getDefaultParent *graph*))
+     (doto (com.mxgraph.layout.hierarchical.mxHierarchicalLayout.
+                *graph*
+                javax.swing.SwingConstants/NORTH)
+       (.setFineTuning true)
+       (setUseBoundingBox true)
+       (.execute (.getDefaultParent *graph*)))
      (.endUpdate (.getModel *graph*))
      *graph*))
+
+(defn as-swing-component
+  "Return a Swing component suitable for use in a GUI."
+  [graph]
+  (doto (com.mxgraph.swing.mxGraphComponent. graph)
+    (.setCenterPage true)))
 
 (defn as-svg
   "Return `graph` as a string containing an SVG document depicting the graph."
@@ -61,9 +92,11 @@
   [viewer graph]
   (let [cp (.getContentPane viewer)]
     (.removeAll cp)
-    (.add cp (com.mxgraph.swing.mxGraphComponent. graph)))
+    (.setLayout cp (java.awt.BorderLayout.))
+    (.add cp (as-swing-component graph) (java.awt.BorderLayout/CENTER)))
   (.pack viewer)
-  (.setVisible viewer true))
+  (.setVisible viewer true)
+  graph)
 
 (defn create-viewer
   "Create a new Swing GUI viewer showing `graph`."
@@ -73,7 +106,7 @@
     frm))
 
 (comment
-  
+
 ;; grab some words from the UNIX dictionary
 (def words
   (into [] (clojure.string/split-lines (slurp "/usr/share/dict/words"))))
@@ -83,7 +116,9 @@
   (with-graph (create-graph)
     (let [vertices (repeatedly 10 #(insert-vertex! (rand-nth words)))]
       (doseq [edge-label (repeatedly 20 #(rand-nth words))]
-        (insert-edge! (rand-nth vertices) (rand-nth vertices) edge-label)))))
+        (insert-edge! (rand-nth vertices)
+                      (rand-nth vertices)
+                      :label edge-label)))))
 
 (def graph (random-graph))
 
