@@ -27,7 +27,7 @@ function.
 
 ## Usage
 
-`[arrowic "0.1.1-SNAPSHOT"]`
+`[arrowic "0.1.1"]`
 
 A new empty graph is created using `create-graph`. The graph thus
 created can then be mutated in place inside of a `with-graph` form
@@ -65,7 +65,7 @@ using `insert-vertex!` and `insert-edge!`.
 
 ## License
 
-Copyright © 2017 Jack Rusher
+Copyright © 2018 Jack Rusher
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

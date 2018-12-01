@@ -3,7 +3,12 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
-## [0.1.1] - 2017-05-14
+## [0.1.1] - 2018-12-01
+### Fixed
+- Fix use of `use` rather than `:use` that violated `ns` spec in
+  Clojure `1.9`.
+
+## [0.1.1-SNAPSHOT] - 2017-05-14
 ### Added
 - edge and vertex style specifications
 - `as-swing-component` to return an embeddable graph viewer for use

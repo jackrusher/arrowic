@@ -1,5 +1,5 @@
 (ns arrowic.core
-  (use [arrowic.style]))
+  (:use [arrowic.style]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; minimalist wrapper around mxGraph
