@@ -1,5 +1,4 @@
 (ns arrowic.core
-  (:require [clojure.reflect :refer [reflect]])
   (:use [arrowic.style]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
