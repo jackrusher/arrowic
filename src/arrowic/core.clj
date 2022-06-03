@@ -1,4 +1,5 @@
 (ns arrowic.core
+  (:require [clojure.reflect :refer [reflect]])
   (:use [arrowic.style]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -83,6 +84,23 @@
                (.setEmbedded true))))))
       (.getDocument)
       (com.mxgraph.util.mxXmlUtils/getXml)))
+
+(defn as-data
+  "Return `graph` as a sequence of maps describing each edge and vertex."
+  [graph]
+  (mapv (fn [cell]
+          {:value (.getValue cell)
+           :vertex? (.isVertex cell)
+           :geometry (let [g (.getGeometry cell)]
+                       {:height (.getHeight g)
+                        :width (.getWidth g)
+                        :x (.getX g)
+                        :y (.getY g)
+                        :points (mapv #(vector (.getX %) (.getY %)) (.getPoints g))})
+           :style (reduce #(apply (partial assoc %1) (clojure.string/split %2 #"="))
+                          {}
+                          (remove empty? (-> (.getStyle cell) (clojure.string/split #";"))))})
+        (.getChildCells graph (.getDefaultParent graph))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Swing viewer fns
