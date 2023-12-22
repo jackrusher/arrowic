@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file. This change
 
 ## [Unreleased]
 
+## [0.1.2] - 2023-12-22
+### Added
+- `graph-from-seqs` convenience function
+### Changed
+- moved to `deps.edn` from `project.clj`
+- updated upstream deps
+- improved default layout, especially edge placement
+
 ## [0.1.1] - 2018-12-01
 ### Fixed
 - Fix use of `use` rather than `:use` that violated `ns` spec in

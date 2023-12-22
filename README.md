@@ -3,8 +3,7 @@
 O frabjous day! Callooh! Callay! Yet another tiny, incomplete clojure
 wrapper around a Java library!
 
-In this case, the
-simplest
+In this case, the simplest
 [directed graph](https://en.wikipedia.org/wiki/Directed_graph) viewer
 possible for those situation where you are in the process of
 interrogating some data and would like to how it looks as boxes and
@@ -27,11 +26,32 @@ function.
 
 ## Usage
 
-`[arrowic "0.1.1"]`
+I'm not currently pushing new versions of this library to Clojars, so
+you should use it as a git dependency from `deps.edn`. Once you have
+it in your project, require whichever parts of the public API you need:
 
-A new empty graph is created using `create-graph`. The graph thus
-created can then be mutated in place inside of a `with-graph` form
-using `insert-vertex!` and `insert-edge!`.
+``` clojure
+(ns fancy-project
+  (:require [arrowic.core :refer [create-graph graph-from-seqs insert-edge! insert-vertex! create-viewer]]))
+```
+
+The easiest way to get a quick graph from your data is probably
+`graph-from-seqs`, to which you can pass a sequence of sequences of 2
+or 3 items where the first two are nodes and the (optional) third is
+an edge label. The return value of that function can be passed to
+`create-viewer`, which will pop up a new window showing the graph:
+
+``` clojure
+(def viewer
+  (create-viewer
+   (graph-from-seqs [["Clojure" "Lisp" "is-a"]
+                     ["Clojure" "functional programming" "supports-paradigm"]])))
+```
+
+If you would rather use the imperative API, a new empty graph can be
+created using `create-graph`. The graph thus created can then be
+mutated in place inside of a `with-graph` form using `insert-vertex!`
+and `insert-edge!`.
 
 ``` clojure
 (use '[arrowic.core])
@@ -53,19 +73,21 @@ using `insert-vertex!` and `insert-edge!`.
 
 (def viewer (create-viewer graph))
 
+;; you can re-use a viewer with a new graph like this:
 (def another-graph (random-graph))
 
-;; can change the currently viewed graph this way:
 (view viewer another-graph)
+```
 
-;; export a graph to SVG
+It's also easy to export a graph as an SVG diagram:
+
+``` clojure
 (spit "example.svg" (as-svg another-graph))
-
 ```
 
 ## License
 
-Copyright © 2018 Jack Rusher
+Copyright © 2018-2023 Jack Rusher
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

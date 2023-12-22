@@ -2,7 +2,7 @@
   (:use [arrowic.style]))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; minimalist wrapper around mxGraph
+;; minimalist wrapper around jgraphx
 
 (def ^:dynamic *graph* nil)
 
@@ -10,10 +10,10 @@
 ;; style for every insert, but not sure how to merge default style
 ;; with per-node style requests if done that way.
 (defn create-graph
-  "Return a new empty graph."
-  []
-  (doto (com.mxgraph.view.mxGraph.)
-    (.setCellsLocked true)))
+  "Return a new empty graph. An options map may be passed to specify t"
+  ([] (create-graph {}))
+  ([opts] (doto (com.mxgraph.view.mxGraph.)
+            (.setCellsLocked true))))
 
 (defn insert-vertex!
   "Inserts vertex `v` into *graph*. The string representation of `v` is used both for its label and as its identity."
@@ -48,14 +48,28 @@
   `(binding [*graph* ~graph]
      (.beginUpdate (.getModel *graph*))
      ~@body
-     (doto (com.mxgraph.layout.hierarchical.mxHierarchicalLayout.
-                *graph*
-                javax.swing.SwingConstants/NORTH)
-       (.setFineTuning true)
-       (.setUseBoundingBox true)
-       (.execute (.getDefaultParent *graph*)))
      (.endUpdate (.getModel *graph*))
+     (doto (com.mxgraph.layout.hierarchical.mxHierarchicalLayout. *graph*)
+       (.setFineTuning true)
+       (.setMoveParent true)
+       (.setResizeParent true)
+       #_ (.setUseBoundingBox true)
+       (.execute (.getDefaultParent *graph*)))
+     (.execute (com.mxgraph.layout.mxEdgeLabelLayout. *graph*) (.getDefaultParent *graph*))
      *graph*))
+
+(defn graph-from-seqs
+  "Create a new graph from `seqs`, which is a sequence of sequences like `[a b label]` where `a` and `b` are nodes and `label` is an optional edge label."
+  [seqs]
+  (with-graph (create-graph)
+    (let [vertices (reduce (fn [m x]
+                             (assoc m x (insert-vertex! x)))
+                           {}
+                           (distinct (mapcat (partial take 2) seqs)))]
+      (doseq [[a b label] seqs]
+        (if label
+          (insert-edge! (vertices a) (vertices b) :label label)
+          (insert-edge! (vertices a) (vertices b)))))))
 
 (defn as-swing-component
   "Return a Swing component suitable for use in a GUI."
@@ -143,8 +157,14 @@
 
 (def another-graph (random-graph))
 
-;; can change the graph this way:
+;; can re-use the graph viewer this way:
 (view viewer another-graph)
+
+;; use the sequence interface
+(def viewer
+  (create-viewer
+   (graph-from-seqs [["Clojure" "Lisp" "is-a"]
+                     ["Clojure" "functional programming" "supports-paradigm"]])))
 
 ;; export a graph to SVG
 (spit "example.svg" (as-svg another-graph))
